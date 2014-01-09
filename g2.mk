@@ -64,11 +64,13 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
 	frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
 	frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
-	frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml
-
+	frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
+	frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
+	frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml
 
 # GPS configuration
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config \
     $(LOCAL_PATH)/gps.conf:system/etc/gps.conf
 
 PRODUCT_PACKAGES += \
@@ -124,9 +126,27 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.telephony.call_ring.multiple=0
 
+# Read value of network mode from NV
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.radio.mode_pref_nv10=1
+
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.telephony.ril_class=LgeLteRIL \
 	ro.telephony.ril.v3=qcomdsds
+
+# update 1x signal strength after 2s
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+	persist.radio.snapshot_enabled=1 \
+	persist.radio.snapshot_timer=2
+
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+	persist.radio.use_cc_names=true
+
+# Request modem to send PLMN name always irrespective
+# of display condition in EFSPN.
+# RIL uses this property.
+PRODUCT_PROPERTY_OVERRIDES += \
+	persist.radio.always_send_plmn=true
 
 #Upto 3 layers can go through overlays
 PRODUCT_PROPERTY_OVERRIDES += persist.hwc.mdpcomp.enable=true
@@ -191,7 +211,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	wifi.interface=wlan0 \
-	wifi.supplicant_scan_interval=15
+	wifi.supplicant_scan_interval=120
 
 # Enable AAC 5.1 output
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -202,6 +222,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.qc.sensors.wl_dis=true
+
+# Setup custom emergency number list based on the MCC. This is needed by RIL
+PRODUCT_PROPERTY_OVERRIDES += \
+        persist.radio.custom_ecc=1
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	persist.sys.usb.config=mtp
