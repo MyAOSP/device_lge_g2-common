@@ -74,9 +74,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps.conf:system/etc/gps.conf
 
 PRODUCT_PACKAGES += \
-    GestureSettings
-
-PRODUCT_PACKAGES += \
     charger_res_images \
     charger
 
@@ -115,8 +112,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
 	persist.audio.fluence.voicecall=true \
 	persist.audio.dualmic.config=endfire \
-	af.resampler.quality=4
-
+	af.resampler.quality=4 \
+	audio.offload.buffer.size.kb=32 \
+	audio.offload.gapless.enabled=true \
+	av.offload.enable=true
 
 # Do not power down SIM card when modem is sent to Low Power Mode.
 PRODUCT_PROPERTY_OVERRIDES += \
