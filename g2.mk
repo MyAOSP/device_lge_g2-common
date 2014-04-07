@@ -106,18 +106,39 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml
 
 PRODUCT_PROPERTY_OVERRIDES += \
-        ro.sf.lcd_density=480 \
-	ro.opengles.version=196608 \
-	ro.loki_enabled=1
+    ro.sf.lcd_density=480 \
+    ro.opengles.version=196608 \
+    ro.loki_enabled=1
 
 # Audio Configuration
+ifeq ($(filter vs980,$(TARGET_DEVICE)),)
 PRODUCT_PROPERTY_OVERRIDES += \
-	persist.audio.fluence.voicecall=true \
-	persist.audio.dualmic.config=endfire \
-	af.resampler.quality=4 \
-	audio.offload.buffer.size.kb=32 \
-	audio.offload.gapless.enabled=false \
-	av.offload.enable=true
+    persist.audio.handset.mic.type=digital \
+    persist.audio.dualmic.config=endfire \
+    persist.audio.fluence.voicecall=true \
+    persist.audio.fluence.voicerec=false \
+    persist.audio.fluence.speaker=false
+else
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.qc.sdk.audio.ssr=false \
+    ro.qc.sdk.audio.fluencetype=fluence \
+    persist.audio.fluence.mode=endfire \
+    persist.audio.handset.mic=digital \
+    persist.audio.voicecall.mic=0 \
+    persist.audio.voice.clarity=none \
+    persist.audio.aanc.enable=false \
+    persist.audio.handset_rx_type=DEFAULT \
+    persist.audio.nsenabled=ON \
+    persist.speaker.prot.enable=false \
+    persist.audio.spkcall_2mic=OFF
+endif
+PRODUCT_PROPERTY_OVERRIDES += \
+    af.resampler.quality=255 \
+    audio.offload.buffer.size.kb=32 \
+    audio.offload.gapless.enabled=false \
+    av.offload.enable=true \
+    ro.config.vc_call_vol_steps=12 \
+    ro.config.vc_call_vol_default=8
 
 # Do not power down SIM card when modem is sent to Low Power Mode.
 PRODUCT_PROPERTY_OVERRIDES += \
