@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011 The Android Open-Source Project
+# Copyright (C) 2013 The Android Open-Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-## overlays
+## common g2 overlays
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
 # This device is xhdpi.  However the platform doesn't
@@ -24,13 +24,11 @@ DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 PRODUCT_AAPT_CONFIG := normal hdpi xhdpi xxhdpi
 PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 
-
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init.g2.rc:root/init.g2.rc \
     $(LOCAL_PATH)/init.g2.usb.rc:root/init.g2.usb.rc \
     $(LOCAL_PATH)/ueventd.g2.rc:root/ueventd.g2.rc \
     $(LOCAL_PATH)/fstab.g2:root/fstab.g2
-
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf \
@@ -41,7 +39,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermald.conf:system/etc/thermald.conf \
-    $(LOCAL_PATH)/configs/thermal-engine.conf:system/etc/thermal-engine.conf
+    $(LOCAL_PATH)/configs/thermal-engine-8974.conf:system/etc/thermal-engine-8974.conf
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/touch_dev.idc:system/usr/idc/touch_dev.idc
@@ -71,10 +69,12 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
 	frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml
 
+
 # GPS configuration
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config \
-    $(LOCAL_PATH)/gps.conf:system/etc/gps.conf
+    $(LOCAL_PATH)/gps/sec_config:system/etc/sec_config \
+    $(LOCAL_PATH)/gps/gps.conf:system/etc/gps.conf \
+    $(LOCAL_PATH)/gps/izat.conf:system/etc/izat.conf
 
 PRODUCT_PACKAGES += \
     charger_res_images \
@@ -113,34 +113,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.loki_enabled=1
 
 # Audio Configuration
-ifeq ($(filter vs980,$(TARGET_DEVICE)),)
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.audio.handset.mic.type=digital \
-    persist.audio.dualmic.config=endfire \
-    persist.audio.fluence.voicecall=true \
-    persist.audio.fluence.voicerec=false \
-    persist.audio.fluence.speaker=false
-else
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.qc.sdk.audio.ssr=false \
-    ro.qc.sdk.audio.fluencetype=fluence \
-    persist.audio.fluence.mode=endfire \
-    persist.audio.handset.mic=digital \
-    persist.audio.voicecall.mic=0 \
-    persist.audio.voice.clarity=none \
-    persist.audio.aanc.enable=false \
-    persist.audio.handset_rx_type=DEFAULT \
-    persist.audio.nsenabled=ON \
-    persist.speaker.prot.enable=false \
-    persist.audio.spkcall_2mic=OFF
-endif
-PRODUCT_PROPERTY_OVERRIDES += \
-    af.resampler.quality=255 \
-    audio.offload.buffer.size.kb=32 \
-    audio.offload.gapless.enabled=false \
-    av.offload.enable=true \
-    ro.config.vc_call_vol_steps=12 \
-    ro.config.vc_call_vol_default=8
+	persist.audio.fluence.voicecall=true \
+	persist.audio.dualmic.config=endfire \
+	af.resampler.quality=4 \
+	audio.offload.buffer.size.kb=32 \
+	audio.offload.gapless.enabled=false \
+	av.offload.enable=true
 
 # Do not power down SIM card when modem is sent to Low Power Mode.
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -150,27 +129,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.telephony.call_ring.multiple=0
 
-# Read value of network mode from NV
-PRODUCT_PROPERTY_OVERRIDES += \
-	persist.radio.mode_pref_nv10=1
-
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.telephony.ril_class=LgeLteRIL \
 	ro.telephony.ril.v3=qcomdsds
-
-# update 1x signal strength after 2s
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-	persist.radio.snapshot_enabled=1 \
-	persist.radio.snapshot_timer=2
-
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-	persist.radio.use_cc_names=true
-
-# Request modem to send PLMN name always irrespective
-# of display condition in EFSPN.
-# RIL uses this property.
-PRODUCT_PROPERTY_OVERRIDES += \
-	persist.radio.always_send_plmn=true
 
 #Upto 3 layers can go through overlays
 PRODUCT_PROPERTY_OVERRIDES += persist.hwc.mdpcomp.enable=true
@@ -205,14 +166,8 @@ PRODUCT_PACKAGES += \
 	audio.r_submix.default \
 	libaudio-resampler
 
-# Audio effects
 PRODUCT_PACKAGES += \
-	libqcomvisualizer \
-	libqcomvoiceprocessing \
-	libqcomvoiceprocessingdescriptors
-
-PRODUCT_PACKAGES += \
-        libmm-omxcore \
+    libmm-omxcore \
 	libdivxdrmdecrypt \
 	libOmxVdec \
 	libOmxVenc \
@@ -221,11 +176,7 @@ PRODUCT_PACKAGES += \
 	libc2dcolorconvert
 
 PRODUCT_PACKAGES += \
-	libloc_adapter \
-	libloc_eng \
-	libloc_api_v02 \
-	libgps.utils \
-	gps.msm8974
+	libloc_adapter
 
 PRODUCT_PACKAGES += \
 	hwaddrs
@@ -241,7 +192,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	wifi.interface=wlan0 \
-	wifi.supplicant_scan_interval=120
+	wifi.supplicant_scan_interval=15
 
 # Enable AAC 5.1 output
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -256,13 +207,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.qualcomm.sensors.pedometer=true \
 	ro.qualcomm.sensors.pam=true \
 	ro.qualcomm.sensors.scrn_ortn=true \
-	debug.qualcomm.sns.hal=1 \
-	debug.qualcomm.sns.daemon=1 \
+	debug.qualcomm.sns.hal=i \
+	debug.qualcomm.sns.daemon=i \
 	debug.qualcomm.sns.libsensor1=e
-
-# Setup custom emergency number list based on the MCC. This is needed by RIL
-PRODUCT_PROPERTY_OVERRIDES += \
-        persist.radio.custom_ecc=1
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	persist.sys.usb.config=mtp
@@ -273,18 +220,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
         $(LOCAL_PATH)/configs/bcmdhd.cal:system/etc/wifi/bcmdhd.cal
 
-# Input resampling configuration
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.input.noresample=1
-
 # This hw ships locked, work around it with loki
 PRODUCT_PACKAGES += \
         loki.sh \
         loki_patch \
         loki_flash
-
-PRODUCT_PROPERTY_OVERRIDES += \
-  mm.enable.smoothstreaming=true
 
 $(call inherit-product, frameworks/native/build/phone-xxhdpi-2048-dalvik-heap.mk)
 
