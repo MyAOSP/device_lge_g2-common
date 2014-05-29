@@ -154,6 +154,11 @@ PRODUCT_PACKAGES += \
 	copybit.msm8974 \
 	memtrack.msm8974
 
+# TimeService apk fixes recovery time/date
+PRODUCT_PACKAGES += \
+	TimeService \
+	libTimeService
+
 # Local wrapper for fixups
 PRODUCT_PACKAGES += \
 	camera.g2
