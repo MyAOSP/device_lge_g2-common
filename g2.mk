@@ -47,9 +47,13 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/flp.conf:system/etc/flp.conf \
     $(LOCAL_PATH)/gps/izat.conf:system/etc/izat.conf \
     $(LOCAL_PATH)/gps/sec_config:system/etc/sec_config
-    
+
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/touch_dev.idc:system/usr/idc/touch_dev.idc
+    $(LOCAL_PATH)/touch_dev.idc:system/usr/idc/touch_dev.idc# Prepatch to fix BT/WiFi bus lockups
+
+# Prepatch to fix BT/WiFi bus lockups
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/bluetooth/bcm4335_prepatch.hcd:system/vendor/firmware/bcm4335_prepatch.hcd
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
