@@ -41,6 +41,13 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermald.conf:system/etc/thermald.conf \
     $(LOCAL_PATH)/configs/thermal-engine-8974.conf:system/etc/thermal-engine-8974.conf
 
+# GPS Configs
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/gps/gps.conf:system/etc/gps.conf \
+    $(LOCAL_PATH)/gps/flp.conf:system/etc/flp.conf \
+    $(LOCAL_PATH)/gps/izat.conf:system/etc/izat.conf \
+    $(LOCAL_PATH)/gps/sec_config:system/etc/sec_config
+    
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/touch_dev.idc:system/usr/idc/touch_dev.idc
 
@@ -69,13 +76,7 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
 	frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml
 
-
-# GPS configuration
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/gps/sec_config:system/etc/sec_config \
-    $(LOCAL_PATH)/gps/gps.conf:system/etc/gps.conf \
-    $(LOCAL_PATH)/gps/izat.conf:system/etc/izat.conf
-
+# Charger
 PRODUCT_PACKAGES += \
     charger_res_images \
     charger
