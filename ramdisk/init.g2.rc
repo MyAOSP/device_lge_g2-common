@@ -46,7 +46,7 @@ on init
 
     # Prevents permission denied error for telephony
     chmod 0644 /proc/cmdline
- 
+
 on fs
     mount_all ./fstab.g2
     write /sys/kernel/boot_adsp/boot 1
@@ -283,6 +283,10 @@ on post-fs-data
     chmod 664 /sys/devices/system/cpu/cpu3/online
     write /dev/cpuctl/apps/cpu.notify_on_migrate 1
 
+    # Torch
+    chown system camera /sys/class/leds/led:flash_torch/brightness
+    chmod 0660 /sys/class/leds/led:flash_torch/brightness
+
     chown system system /sys/devices/virtual/input/lge_touch/touch_gesture
     write /sys/devices/virtual/input/lge_touch/touch_gesture 1
     chown root system /sys/devices/platform/tspdrv/nforce_timed
@@ -467,4 +471,3 @@ service time_daemon /system/bin/time_daemon
 service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 /mnt/media_rw/usbdisk /storage/usbdisk
     class late_start
     disabled
-
