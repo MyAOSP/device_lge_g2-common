@@ -1,7 +1,7 @@
 [
   {
-    "repository": "CyanogenMod/android_device_qcom_common",
+    "repository": "TeamBAKED/device_qcom_common",
     "target_path": "device/qcom/common",
-    "branch": "cm-11.0"
+    "branch": "kk-4.4"
   }
 ]
